@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import * as Joi from 'joi';
 
 const envSchema = Joi.object({
@@ -16,3 +17,5 @@ const config = {
     BACKEND_URL: envVars.BACKEND_URL,
 };
 export default config;
+
+

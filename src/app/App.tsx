@@ -5,7 +5,6 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import React from 'react';
 import Layout from '../components/Layout/Layout';
 import NotFound from '../pages/NotFound';
 
