@@ -1,98 +1,109 @@
-import { Link, useLocation } from "react-router-dom";
-import { Calendar, CalendarPlus2, ClipboardList, Ellipsis, FolderOpenDot, House, Settings } from "lucide-react";
+import { Link, useLocation } from 'react-router-dom';
+import { Calendar, CalendarPlus2, ClipboardList, Ellipsis, FolderOpenDot, House, Settings } from 'lucide-react';
 
 const Sidebar = () => {
     const location = useLocation();
 
     const navItems = [
         {
-            to: "/dashboard",
+            to: '/dashboard',
             icon: <House />,
-            label: "Dashboard",
+            label: 'Dashboard',
+            key: 'dashboard',
         },
         {
-            to: "/projects",
+            to: '/projects',
             icon: <FolderOpenDot />,
-            label: "Projects",
+            label: 'Projects',
+            key: 'projects',
         },
         {
-            to: "/settings",
+            to: '/settings',
             icon: <Settings />,
-            label: "Settings",
+            label: 'Settings',
+            key: 'settings',
         },
     ];
 
     const calendarItems = [
         {
-            to: "",
+            to: '',
             icon: <CalendarPlus2 />,
-            label: "Events",
+            label: 'Events',
+            key: 'events',
         },
         {
-            to: "",
+            to: '',
             icon: <ClipboardList />,
-            label: "Tasks",
+            label: 'Tasks',
+            key: 'tasks',
         },
         {
-            to: "",
+            to: '',
             icon: <Ellipsis />,
-            label: "Other",
-        }
+            label: 'Other',
+            key: 'other',
+        },
     ];
 
-
     return (
-        <div className="fixed top-4 left-4 bottom-4 bg-gray-900 rounded-xl flex flex-col items-center py-4 space-y-6 shadow-md w-16
-         hover:w-96 transition-all duration-300 ease-in-out z-20 overflow-hidden text-gray-300">
-            <aside className="fixed top-4 left-4 bottom-4 w-20 bg-gray-800 rounded-xl flex flex-col items-center py-4 space-y-6 shadow-md">
-                <img src="/avatars/bleach.jpg" alt="Profile" className="w-12 h-12 rounded-full border-2 border-white mb-7" />
-                {navItems.map((item) => (
-                    <Link
-                        key={item.to}
-                        to={item.to}
-                        className={`w-10 h-10 mb-4 rounded-md flex justify-center items-center hover:bg-indigo-700 transition ${location.pathname === item.to ? "bg-indigo-700" : "bg-gray-800"
-                            }`}
-                        title={item.label}
-                    >
-                        {item.icon}
-                    </Link>
-                ))}
-            </aside>
-            <div className="ml-5 flex flex-col flex-grow p-6 space-y-8 rounded-xl">
-                <h1 className="text-2xl font-bold text-white">Chronos.sadge</h1>
-                <div className="space-y-4">
-                    <nav className="grid grid-cols-2 gap-4">
-                        {calendarItems.map((item) => (
-                            <Link
-                                key={item.to}
-                                to={item.to}
-                                className={`flex flex-col items-center p-2 text-sm hover:text-white transition`}
-                                title={item.label}
-                            >
-                                <div className="bg-gray-800 w-12 h-12 rounded-lg flex items-center justify-center">
-                                    {item.icon}
-                                </div>
-                                <span className="mt-1">{item.label}</span>
-                            </Link>
-                        ))}
-                    </nav>
-
-                    <h2 className="text-lg font-medium text-gray-400">Calendars</h2>
-
-                    <nav className="grid grid-cols-2 gap-4">
+      <div className="fixed top-4 left-4 bottom-4 bg-gray-900 rounded-xl flex flex-col items-center py-4 space-y-6 shadow-md w-16
+				 hover:w-[26rem] transition-all duration-300 ease-in-out z-20 overflow-hidden text-gray-300 group">
+          <aside
+            className="fixed top-4 left-4 bottom-4 w-20 bg-gray-800 rounded-xl flex flex-col items-center py-4 space-y-6 shadow-md">
+              <img src="/avatars/bleach.jpg" alt="Profile"
+                   className="w-12 h-12 rounded-full border-2 border-white mb-7" />
+              {navItems.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`w-10 h-10 mb-4 rounded-md flex justify-center items-center hover:bg-indigo-700 transition ${location.pathname === item.to ? 'bg-indigo-700' : 'bg-gray-800'
+                  }`}
+                  title={item.label}
+                >
+                    {item.icon}
+                </Link>
+              ))}
+          </aside>
+          <div className="ml-20 flex flex-col flex-grow p-6 space-y-8 rounded-xl w-[calc(100%-5rem)]">
+              <h1
+                className="text-2xl font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">Chronos.sadge</h1>
+              <div className="space-y-4">
+                  <nav
+                    className="grid grid-cols-2 gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {calendarItems.map((item) => (
                         <Link
-                            to="/grid"
-                            className="flex flex-col items-center p-2 text-sm hover:text-white transition"
+                          key={item.key}
+                          to={item.to}
+                          className={`flex flex-col items-center p-2 text-sm hover:text-white transition`}
+                          title={item.label}
                         >
                             <div className="bg-gray-800 w-12 h-12 rounded-lg flex items-center justify-center">
-                                <Calendar color="red" />
+                                {item.icon}
                             </div>
-                            <span className="mt-1">My calendar</span>
+                            <span className="mt-1">{item.label}</span>
                         </Link>
-                    </nav>
-                </div>
-            </div>
-        </div>
+                      ))}
+                  </nav>
+
+                  <h2
+                    className="text-lg font-medium text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Calendars</h2>
+
+                  <nav
+                    className="grid grid-cols-2 gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Link
+                        to="/grid"
+                        className="flex flex-col items-center p-2 text-sm hover:text-white transition"
+                      >
+                          <div className="bg-gray-800 w-12 h-12 rounded-lg flex items-center justify-center">
+                              <Calendar color="red" />
+                          </div>
+                          <span className="mt-1">My calendar</span>
+                      </Link>
+                  </nav>
+              </div>
+          </div>
+      </div>
     );
 };
 
