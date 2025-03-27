@@ -88,8 +88,8 @@ const Sidebar = () => {
     <aside
       className={`fixed top-0 left-0 h-screen bg-white dark:bg-gray-900 shadow-lg transition-all duration-300 ease-in-out
         ${isExpanded ? 'w-64' : 'w-20'} z-50`}
-    // onMouseEnter={() => setIsExpanded(true)}
-    // onMouseLeave={() => setIsExpanded(false)}
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="flex flex-col h-full">
 
