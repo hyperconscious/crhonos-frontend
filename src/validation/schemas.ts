@@ -5,6 +5,7 @@ export interface RegisterData {
   email: string;
   password: string;
   passwordConfirmation: string;
+  countryCode: string;
   full_name?: string;
 }
 
@@ -111,6 +112,7 @@ export const registerSchema = Joi.object({
       'string.email': 'Email must be a valid email address.',
       'any.required': 'Email is required.',
     }),
+  countryCode: Joi.string().required(),
 });
 
 export const loginSchema = Joi.object({

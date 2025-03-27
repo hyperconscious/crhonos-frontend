@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     Bell,
-    Zap,
-    BarChart3,
     Users,
-    MessageSquare,
+    Clock,
+    Star,
+    Calendar,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { UserContext } from '../../context/UserContext';
+import config from '../../config/env.config';
 
 function Dashboard() {
     const { isDark } = useTheme();
+    const { user } = useContext(UserContext) || {};
     const [notifications, setNotifications] = useState([
         { id: 1, text: 'New message from Team', time: '5m ago', unread: true },
         { id: 2, text: 'Project status updated', time: '15m ago', unread: true },
@@ -24,10 +27,10 @@ function Dashboard() {
     ];
 
     const stats = [
-        { label: 'Tasks Done', value: '24', icon: <Zap className="w-5 h-5" /> },
-        { label: 'Projects', value: '7', icon: <BarChart3 className="w-5 h-5" /> },
-        { label: 'Team Members', value: '12', icon: <Users className="w-5 h-5" /> },
-        { label: 'Messages', value: '18', icon: <MessageSquare className="w-5 h-5" /> },
+        { label: 'My calendars', value: '7', icon: <Calendar className="w-5 h-5" /> },
+        { label: 'Events Today', value: '7', icon: <Star className="w-5 h-5" /> },
+        { label: 'Shared', value: '12', icon: <Users className="w-5 h-5" /> },
+        { label: 'Upcoming', value: '18', icon: <Clock className="w-5 h-5" /> },
     ];
 
     const markAsRead = (id: number) => {
@@ -43,7 +46,14 @@ function Dashboard() {
                     <div className="lg:col-span-2 space-y-8">
 
                         <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
-                            <h1 className="text-3xl font-bold mb-2">Welcome back, Alex!</h1>
+                            <div className='flex items-center justify-between'>
+                                <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.full_name}!</h1>
+                                <img
+                                    src={user?.avatar ? `${config.BACKEND_URL}${user.avatar}` : '/avatars/default_avatar.jpg'}
+                                    alt="User Avatar"
+                                    className="w-16 h-16 rounded-full object-cover mr-2 ml-2"
+                                />
+                            </div>
                             <p className="opacity-90">You have 3 tasks due today</p>
                             <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {stats.map((stat, i) => (

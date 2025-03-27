@@ -19,7 +19,7 @@ const InputField: React.FC<InputFieldProps> = ({
     icon,
 }) => {
     return (
-        <div className="flex flex-col mb-4 w-full ">
+        <div className="flex flex-col mb-4 w-full">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{label}</label>
             <div className="relative">
                 {icon && (

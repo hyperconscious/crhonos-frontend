@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Calendar,
   CalendarPlus2,
@@ -13,13 +13,23 @@ import {
   Bell,
   User
 } from 'lucide-react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
+import AuthStore from '../../store/AuthStore';
+import { UserContext } from '../../context/UserContext';
 
 const Sidebar = () => {
   const location = useLocation();
   const [isExpanded, setIsExpanded] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const { setUser } = useContext(UserContext) || {};
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    AuthStore.removeTokens();
+    setUser?.(null);
+    navigate('/auth');
+  };
 
   const navItems = [
     {
@@ -140,6 +150,12 @@ const Sidebar = () => {
                   </Link>
                 ))}
               </div>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 absolute bottom-24 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 ease-in-out bg-opacity-80 dark:bg-opacity-90"
+              >
+                Logout
+              </button>
             </div>
           )}
         </div>

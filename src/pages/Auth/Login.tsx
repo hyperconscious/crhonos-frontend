@@ -6,9 +6,8 @@ import { LoginData, loginSchema } from '../../validation/schemas';
 import InputField from '../../shared/InputField';
 import AuthService from '../../services/AuthService';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import AuthStore from '../../store/AuthStore';
-import { notifyDismiss, notifyError, notifyLoading, notifySuccess } from '../../utils/notification';
+import { notifyDismiss, notifyLoading, notifySuccess } from '../../utils/notification';
 
 function Login() {
     const navigate = useNavigate();
@@ -35,14 +34,10 @@ function Login() {
             AuthStore.setTokens(accessToken, refreshToken);
             notifyDismiss(loginId);
             notifySuccess("Login successful!");
-            navigate('/');
+            navigate('/dashboard');
         } catch (error) {
             notifyDismiss(loginId);
-            notifyError(axios.isAxiosError(error) && error.response?.data?.message
-                ? error.response.data.message
-                : "An unexpected error occurred. Please try again."
-            );
-            console.error('Failed to login', error);
+            // console.error('Failed to login', error);
         }
     };
 

@@ -46,9 +46,9 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // if (error.response?.data?.message && error.response?.data?.message != 'No token provided.' && error.response?.data?.message != 'User not found') {
-    //   notifyError(`${error.response.data.message}`);
-    // }
+    if (error.response?.data?.message && error.response?.data?.message != 'No token provided.' && error.response?.data?.message != 'User not found') {
+      notifyError(`${error.response.data.message}`);
+    }
 
     return Promise.reject(error);
   },

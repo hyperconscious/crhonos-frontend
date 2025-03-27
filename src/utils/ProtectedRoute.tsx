@@ -4,11 +4,12 @@ import { UserContext } from '../context/UserContext';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
+    skipAuthRoutes?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, skipAuthRoutes }) => {
     const { user } = useContext(UserContext) || {};
-    if (!user) {
+    if (!user && !skipAuthRoutes) {
         return <Navigate to="/auth" />;
     }
     return <>{children}</>;

@@ -2,7 +2,6 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Navigate,
 } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Layout from '../components/Layout/Layout';
@@ -12,41 +11,44 @@ import Dashboard from '../components/dashboard/Dashboard';
 import Authentcation from '../pages/Auth/index';
 import { UserProvider } from '../context/UserContext';
 import ProtectedRoute from '../utils/ProtectedRoute';
-
+import EmailVerificationPage from '../pages/Auth/EmailVerification';
+import PasswordResetPage from '../pages/Auth/NewPassword';
 
 function App() {
     return (
-        <Router>
-            <Layout>
-                <UserProvider>
+        <UserProvider>
+            <Router>
+                <Layout>
                     <Routes>
                         <Route path="/" element={
-                            // <ProtectedRoute>
-                            <Navigate to="/dashboard" />
-                            // </ProtectedRoute>
+                            <ProtectedRoute skipAuthRoutes={true}>
+                                <Dashboard />
+                            </ProtectedRoute>
                         } />
                         <Route path="/calendar" element={
-                            // <ProtectedRoute>
-                            <Grid />
-                            // </ProtectedRoute>
+                            <ProtectedRoute>
+                                <Grid />
+                            </ProtectedRoute>
                         } />
                         <Route path="/dashboard" element={
-                            // <ProtectedRoute>
-                            <Dashboard />
-                            // </ProtectedRoute> 
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
                         } />
                         <Route path="/settings" element={
-                            // <ProtectedRoute>
-                            <Dashboard />
-                            // </ProtectedRoute>
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
                         } />
                         <Route path="/auth" element={<Authentcation />} />
+                        <Route path="/auth/verify-email" element={<EmailVerificationPage />} />
+                        <Route path="/auth/reset-password" element={<PasswordResetPage />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
-                </UserProvider>
-            </Layout>
-            <Toaster />
-        </Router>
+                    <Toaster />
+                </Layout>
+            </Router>
+        </UserProvider>
     );
 }
 

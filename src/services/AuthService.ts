@@ -19,6 +19,7 @@ class AuthService {
 
   static async sendVerificationEmail(email: string) {
     const host = window.location.origin;
+    console.log(host);
     const callbackUrl = `${host}/auth/verify-email`;
     const response = await axios.post('/api/auth/send-verification-email', { email }, {
       headers: {

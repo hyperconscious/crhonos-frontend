@@ -8,7 +8,8 @@ function Reset() {
     const [email, setEmail] = useState('');
     const [isResetPassword, setIsResetPassword] = useState(true);
 
-    const handleEmailAction = async () => {
+    const handleEmailAction = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (!email) {
             notifyError("Please enter a valid email.");
             return;
