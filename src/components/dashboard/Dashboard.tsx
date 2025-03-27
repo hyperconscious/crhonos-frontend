@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
 import {
     Bell,
+    Zap,
+    BarChart3,
     Users,
-    Clock,
-    Star,
-    Calendar,
+    MessageSquare,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { UserContext } from '../../context/UserContext';
@@ -27,10 +27,10 @@ function Dashboard() {
     ];
 
     const stats = [
-        { label: 'My calendars', value: '7', icon: <Calendar className="w-5 h-5" /> },
-        { label: 'Events Today', value: '7', icon: <Star className="w-5 h-5" /> },
-        { label: 'Shared', value: '12', icon: <Users className="w-5 h-5" /> },
-        { label: 'Upcoming', value: '18', icon: <Clock className="w-5 h-5" /> },
+        { label: 'Tasks Done', value: '24', icon: <Zap className="w-5 h-5" /> },
+        { label: 'Projects', value: '7', icon: <BarChart3 className="w-5 h-5" /> },
+        { label: 'Team Members', value: '12', icon: <Users className="w-5 h-5" /> },
+        { label: 'Messages', value: '18', icon: <MessageSquare className="w-5 h-5" /> },
     ];
 
     const markAsRead = (id: number) => {

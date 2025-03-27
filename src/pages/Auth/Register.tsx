@@ -62,6 +62,7 @@ function Register() {
             await AuthService.register(data);
             notifyDismiss(registeredId);
             notifySuccess("Registration successful! Please check your email for verification.");
+            await AuthService.sendVerificationEmail(data.email);
             navigate('/auth');
         } catch (error) {
             notifyDismiss(registeredId);

@@ -21,24 +21,24 @@ function App() {
                 <Layout>
                     <Routes>
                         <Route path="/" element={
-                            <ProtectedRoute skipAuthRoutes={true}>
-                                <Dashboard />
-                            </ProtectedRoute>
+                            // <ProtectedRoute skipAuthRoutes={true}>
+                            <Dashboard />
+                            // </ProtectedRoute>
                         } />
                         <Route path="/calendar" element={
-                            <ProtectedRoute>
-                                <Grid />
-                            </ProtectedRoute>
+                            // <ProtectedRoute>
+                            <Grid />
+                            //   </ProtectedRoute>
                         } />
                         <Route path="/dashboard" element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
+                            //  <ProtectedRoute>
+                            <Dashboard />
+                            //   </ProtectedRoute>
                         } />
                         <Route path="/settings" element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
+                            //  <ProtectedRoute>
+                            <Dashboard />
+                            // </ProtectedRoute>
                         } />
                         <Route path="/auth" element={<Authentcation />} />
                         <Route path="/auth/verify-email" element={<EmailVerificationPage />} />
