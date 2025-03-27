@@ -4,7 +4,7 @@ import { Calendar } from '../types/calendar';
 import { User } from '../types/user';
 import { Event } from '../types/event';
 import { UserInCalendar } from '../types/UserInCalendar';
-import { PaginatedResponse } from '../types/query';
+import { PaginatedResponse, QueryOptions } from '../types/query';
 
 
 
@@ -43,9 +43,9 @@ class CalendarService {
         );
     }
 
-    static async getCalendarEvents(id: string): Promise<PaginatedResponse<Event>> {
+    static async getCalendarEvents(id: string, options: QueryOptions,): Promise<PaginatedResponse<Event>> {
         return this.handleRequest(
-            axios.get(`/api/calendar/${id}/events`),
+            axios.get(`/api/calendar/${id}/events`, { params: options }),
             'Failed to fetch events'
         );
     }

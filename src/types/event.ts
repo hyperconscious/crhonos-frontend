@@ -28,4 +28,5 @@ export interface Event {
     creator: User;
     tags: Tag[];
     calendar: Calendar;
+    color: string;
 }

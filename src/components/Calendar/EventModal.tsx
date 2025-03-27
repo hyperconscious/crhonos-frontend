@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { X, Calendar, Clock, Type, Repeat } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Calendar } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
+import { format } from 'date-fns';
 import InputField from '../../shared/InputField';
 import CalendarService from '../../services/CalendarService';
 import { toast } from 'react-hot-toast';
@@ -13,16 +14,16 @@ interface EventModalProps {
     onClose: () => void;
     calendarId: string;
     onSubmit: (eventData: any) => Promise<void>;
+    startDate?: string;
+    endDate?: string;
 }
 
 interface EventFormData {
     title: string;
     description: string;
-    startDate: string;
-    startTime: string;
-    endDate: string;
-    endTime: string;
-    type: EventType
+    startDateTime: string;
+    endDateTime: string;
+    type: EventType;
     recurrence: EventRecurrence;
 }
 
@@ -37,20 +38,12 @@ const eventSchema = Joi.object({
         'string.max': 'Description must be at most 500 characters long.'
     }),
 
-    startDate: Joi.string().required().messages({
-        'any.required': 'Start date is required.'
+    startDateTime: Joi.string().required().messages({
+        'any.required': 'Start date and time is required.'
     }),
 
-    startTime: Joi.string().required().messages({
-        'any.required': 'Start time is required.'
-    }),
-
-    endDate: Joi.string().required().messages({
-        'any.required': 'End date is required.'
-    }),
-
-    endTime: Joi.string().required().messages({
-        'any.required': 'End time is required.'
+    endDateTime: Joi.string().required().messages({
+        'any.required': 'End date and time is required.'
     }),
 
     type: Joi.string().valid('arrangement', 'reminder', 'task').required().messages({
@@ -62,42 +55,50 @@ const eventSchema = Joi.object({
     }),
 });
 
-const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, calendarId }) => {
-    const [isAllDay, setIsAllDay] = useState(false);
-
+const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, onSubmit: submitEvent, startDate, endDate }) => {
     const {
         register,
         handleSubmit,
         watch,
         setValue,
+        reset,
         formState: { errors },
     } = useForm<EventFormData>({
         resolver: joiResolver(eventSchema),
         defaultValues: {
             type: EventType.Arrangement,
             recurrence: EventRecurrence.None,
+            startDateTime: startDate ? format(new Date(startDate), "yyyy-MM-dd'T'HH:mm") : '',
+            endDateTime: endDate ? format(new Date(endDate), "yyyy-MM-dd'T'HH:mm") : ''
         }
     });
 
     const eventType = watch('type');
     const recurrence = watch('recurrence');
 
+    useEffect(() => {
+        if (startDate) {
+            setValue('startDateTime', format(new Date(startDate), "yyyy-MM-dd'T'HH:mm"));
+        }
+        if (endDate) {
+            setValue('endDateTime', format(new Date(endDate), "yyyy-MM-dd'T'HH:mm"));
+        }
+    }, [startDate, endDate, setValue]);
+
     const onSubmit = async (data: EventFormData) => {
         const loadingId = toast.loading('Creating event...');
         try {
-            const startDateTime = `${data.startDate}T${isAllDay ? '00:00' : data.startTime}`;
-            const endDateTime = `${data.endDate}T${isAllDay ? '23:59' : data.endTime}`;
-
-            await CalendarService.createEvent(calendarId, {
+            await submitEvent({
                 title: data.title,
                 description: data.description,
-                startTime: new Date(startDateTime),
-                endTime: new Date(endDateTime),
+                startTime: new Date(data.startDateTime).toISOString(),
+                endTime: new Date(data.endDateTime).toISOString(),
                 type: data.type,
                 recurrence: data.recurrence,
             });
             toast.dismiss(loadingId);
             toast.success('Event created successfully');
+            reset();
             onClose();
         } catch (error) {
             toast.dismiss(loadingId);
@@ -136,70 +137,37 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, calendarId }) 
                         placeholder="Enter event description"
                     />
 
-                    <div className="flex items-center space-x-2 mb-4">
-                        <input
-                            type="checkbox"
-                            id="allDay"
-                            checked={isAllDay}
-                            onChange={(e) => setIsAllDay(e.target.checked)}
-                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <label
-                            htmlFor="allDay"
-                            className="text-sm text-gray-700 dark:text-gray-300"
-                        >
-                            All Day Event
-                        </label>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Start
+                                Start Date & Time
                             </label>
-                            <div className="space-y-2">
-                                <div className="relative">
-                                    <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                                    <input
-                                        type="date"
-                                        {...register('startDate')}
-                                        className="pl-10 w-full rounded-lg border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                    />
-                                </div>
-                                {!isAllDay && (
-                                    <div className="relative">
-                                        <Clock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                                        <input
-                                            type="time"
-                                            {...register('startTime')}
-                                            className="pl-10 w-full rounded-lg border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                        />
-                                    </div>
+                            <div className="relative">
+                                <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                                <input
+                                    type="datetime-local"
+                                    {...register('startDateTime')}
+                                    className="pl-10 w-full rounded-lg border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                />
+                                {errors.startDateTime && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.startDateTime.message}</p>
                                 )}
                             </div>
                         </div>
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                End
+                                End Date & Time
                             </label>
-                            <div className="space-y-2">
-                                <div className="relative">
-                                    <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                                    <input
-                                        type="date"
-                                        {...register('endDate')}
-                                        className="pl-10 w-full rounded-lg border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                    />
-                                </div>
-                                {!isAllDay && (
-                                    <div className="relative">
-                                        <Clock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                                        <input
-                                            type="time"
-                                            {...register('endTime')}
-                                            className="pl-10 w-full rounded-lg border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                        />
-                                    </div>
+                            <div className="relative">
+                                <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                                <input
+                                    type="datetime-local"
+                                    {...register('endDateTime')}
+                                    className="pl-10 w-full rounded-lg border border-gray-300 bg-white py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                />
+                                {errors.endDateTime && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.endDateTime.message}</p>
                                 )}
                             </div>
                         </div>
@@ -211,17 +179,17 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, calendarId }) 
                                 Event Type
                             </label>
                             <div className="grid grid-cols-3 gap-2">
-                                {['arrangement', 'reminder', 'task'].map((type) => (
+                                {Object.values(EventType).map((type) => (
                                     <button
                                         key={type}
                                         type="button"
-                                        onClick={() => setValue('type', type as EventType)}
+                                        onClick={() => setValue('type', type)}
                                         className={`py-2 px-4 rounded-lg text-sm font-medium capitalize transition-colors ${eventType === type
                                             ? 'bg-blue-600 text-white'
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                                             }`}
                                     >
-                                        {type}
+                                        {type.toLowerCase()}
                                     </button>
                                 ))}
                             </div>
@@ -232,17 +200,17 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, calendarId }) 
                                 Recurrence
                             </label>
                             <div className="grid grid-cols-3 gap-2">
-                                {['none', 'daily', 'weekly', 'monthly', 'yearly'].map((rec) => (
+                                {Object.values(EventRecurrence).map((rec) => (
                                     <button
                                         key={rec}
                                         type="button"
-                                        onClick={() => setValue('recurrence', rec as EventRecurrence)}
+                                        onClick={() => setValue('recurrence', rec)}
                                         className={`py-2 px-4 rounded-lg text-sm font-medium capitalize transition-colors ${recurrence === rec
                                             ? 'bg-blue-600 text-white'
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                                             }`}
                                     >
-                                        {rec}
+                                        {rec.toLowerCase()}
                                     </button>
                                 ))}
                             </div>
