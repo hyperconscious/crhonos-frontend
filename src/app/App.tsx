@@ -13,6 +13,7 @@ import { UserProvider } from '../context/UserContext';
 import ProtectedRoute from '../utils/ProtectedRoute';
 import EmailVerificationPage from '../pages/Auth/EmailVerification';
 import PasswordResetPage from '../pages/Auth/NewPassword';
+import CreateEvent from '../pages/CreateEvent.tsx';
 
 function App() {
     return (
@@ -39,6 +40,11 @@ function App() {
                             //  <ProtectedRoute>
                             <Dashboard />
                             // </ProtectedRoute>
+                        } />
+                        <Route path="new-event" element={
+                            //  <ProtectedRoute>
+                            <CreateEvent />
+                            //  </ProtectedRoute>
                         } />
                         <Route path="/auth" element={<Authentcation />} />
                         <Route path="/auth/verify-email" element={<EmailVerificationPage />} />
